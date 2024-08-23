@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #282828;
+        }
+
+        .form-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+
+        .form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            padding: 2em;
+            background-color: #171717;
+            border-radius: 25px;
+            width: 350px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            margin-bottom: 1em;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .field label {
+            color: #d3d3d3;
+            font-size: 0.9em;
+        }
+
+        .field input {
+            padding: 12px;
+            border-radius: 5px;
+            border: 1px solid #333;
+            background-color: #222;
+            color: #d3d3d3;
+            font-size: 1em;
+        }
+
+        .field input:focus {
+            border-color: #555;
+            background-color: #1a1a1a;
+        }
+
+        button {
+            padding: 12px;
+            border-radius: 5px;
+            border: none;
+            background-color: #252525;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 1em;
+        }
+
+        button:hover {
+            background-color: black;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <form method="post" enctype="multipart/form-data" class="form">
+            {% csrf_token %}
+            <h1>Register</h1>
+            <div class="field">
+                {{ form.username.label_tag }}
+                {{ form.username }}
+            </div>
+            <div class="field">
+                {{ form.email.label_tag }}
+                {{ form.email }}
+            </div>
+            <div class="field">
+                {{ form.password1.label_tag }}
+                {{ form.password1 }}
+            </div>
+            <div class="field">
+                {{ form.password2.label_tag }}
+                {{ form.password2 }}
+            </div>
+            <div class="field">
+                {{ form.profile_picture.label_tag }}
+                {{ form.profile_picture }}
+            </div>
+            <div class="field">
+                <label>Are you a Trainer ? {{ form.is_trainer }}</label>
+                
+            </div>
+            <button type="submit">Register</button>
+        </form>
+    </div>
+</body>
+</html>

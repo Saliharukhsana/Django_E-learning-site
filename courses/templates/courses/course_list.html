@@ -1,0 +1,287 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .navbar img {
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            object-fit: cover;
+        }
+        .navbar .profile-info {
+            display: flex;
+            align-items: center;
+        }
+        .navbar .profile-info a {
+            color: white;
+            text-decoration: none;
+            margin-left: 15px;
+            font-size: 1em;
+        }
+        .navbar .profile-info a:hover {
+            text-decoration: underline;
+        }
+        .navbar .logout-button {
+            background-color: #ff4d4d;
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .navbar .logout-button:hover {
+            background-color: #cc0000;
+        }
+        .sidebar {
+            width: 250px;
+            padding: 20px;
+            border-right: 1px solid #ddd;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 60px; /* Adjust if needed to fit below the navbar */
+            bottom: 0;
+            overflow-y: auto;
+        }
+        .content {
+            margin-left: 250px;
+            padding: 20px;
+            flex: 1;
+        }
+        .course-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center; /* Center the courses in the available space */
+        }
+        .course-card {
+            width: 300px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .course-card img {
+            width: 100%;
+            height: 200px; /* Adjust height to fit content */
+            object-fit: cover;
+        }
+        .course-card-content {
+            padding: 15px;
+        }
+        .course-card-title {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+        .course-card-duration {
+            color: #555;
+        }
+        .course-card a {
+            text-decoration: none;
+            color: inherit;
+        }
+        .enroll-button {
+            display: inline-block;
+            padding: 8px 16px;
+            color: white;
+            background-color: #007bff;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        .enroll-button:hover {
+            background-color: #0056b3;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            padding: 8px;
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .filter-section {
+            margin-bottom: 20px;
+        }
+        .filter-section h2 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+        .filter-section label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .footer {
+            background-color: #f8f9fa;
+            color: #495057;
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid #ddd;
+        }
+        #course-heading {
+            margin-left: 30px;
+        }
+        .profile-image-container {
+            width: 40px; /* Adjust size as needed */
+            height: 40px; /* Adjust size as needed */
+            border-radius: 50%;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .profile-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        .pagination a, .pagination span {
+            display: inline-block;
+            padding: 8px 16px;
+            margin: 0 4px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            text-decoration: none;
+            color: #007bff;
+        }
+        .pagination a:hover {
+            background-color: #f1f1f1;
+        }
+        .pagination .current {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="profile-info">
+            {% if user.profile_picture %}
+            <div class="profile-image-container">
+                <img src="{{ user.profile_picture.url }}" alt="Profile Image">
+            </div>
+           {% else %}
+            <div class="profile-image-container">
+                <img src="{% static 'images/profile.png' %}" alt="Profile Image">
+            </div>
+           {% endif %}
+            <a href="{% url 'profile' %}">{{ user.username }}</a>
+            <a href="{% url 'logout' %}" class="logout-button">Logout</a>
+        </div>
+    </div>
+    <div class="sidebar">
+        <form method="get" action="{% url 'course_list' %}">
+            <input type="text" name="q" value="{{ query }}" placeholder="Search for courses...">
+            <button type="submit">Search</button>
+        </form>
+        <div class="filter-section">
+            <h2>Filter by Level</h2>
+            <form method="get" action="{% url 'course_list' %}">
+                <input type="hidden" name="q" value="{{ query }}">
+                <label>
+                    <input type="radio" name="level" value="" {% if not selected_level %}checked{% endif %}> All
+                </label>
+                <label>
+                    <input type="radio" name="level" value="beginner" {% if selected_level == 'beginner' %}checked{% endif %}> Beginner
+                </label>
+                <label>
+                    <input type="radio" name="level" value="intermediate" {% if selected_level == 'intermediate' %}checked{% endif %}> Intermediate
+                </label>
+                <label>
+                    <input type="radio" name="level" value="advanced" {% if selected_level == 'advanced' %}checked{% endif %}> Advanced
+                </label>
+                <button type="submit">Filter</button>
+            </form>
+        </div>
+    </div>
+    <div class="content">
+        <h1 id="course-heading">Courses</h1>
+        <div class="course-container">
+            {% for course in courses %}
+                <div class="course-card">
+                    {% if course.Course_image %}
+                        <img src="{{ course.Course_image.url }}" alt="{{ course.title }}">
+                    {% endif %}
+                    <div class="course-card-content">
+                        <a href="{% url 'course_detail' course.id %}">
+                            <div class="course-card-title">{{ course.title }}</div>
+                        </a>
+                        <div class="course-card-learners">{{ course.enrollment_count }}+ Learners</div>
+                        <div class="course-card-duration">Duration: {{ course.duration_in_hours }}</div>
+                        <a href="{% url 'enroll_now' course.id %}" class="enroll-button">Enroll Now</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination controls -->
+        <div class="pagination">
+            {% if courses.has_previous %}
+                <a href="?q={{ query }}&level={{ selected_level }}&page=1">&laquo; First</a>
+                <a href="?q={{ query }}&level={{ selected_level }}&page={{ courses.previous_page_number }}">Previous</a>
+            {% endif %}
+
+            {% for num in courses.paginator.page_range %}
+                {% if courses.number == num %}
+                    <span class="current">{{ num }}</span>
+                {% else %}
+                    <a href="?q={{ query }}&level={{ selected_level }}&page={{ num }}">{{ num }}</a>
+                {% endif %}
+            {% endfor %}
+
+            {% if courses.has_next %}
+                <a href="?q={{ query }}&level={{ selected_level }}&page={{ courses.next_page_number }}">Next</a>
+                <a href="?q={{ query }}&level={{ selected_level }}&page={{ courses.paginator.num_pages }}">Last &raquo;</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>&copy;  {% now "Y" %} Your Company. All rights reserved.</p>
+    </div>
+</body>
+</html>

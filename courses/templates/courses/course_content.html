@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ course.title }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .course-title {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+        .lecture-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .lecture-list li {
+            margin-bottom: 10px;
+        }
+        .lecture-list a {
+            text-decoration: none;
+            color: #007bff;
+        }
+        .lecture-list a:hover {
+            text-decoration: underline;
+        }
+      
+            body {
+                font-family: Arial, sans-serif;
+                margin: 20px;
+            }
+            .course-title {
+                font-size: 2em;
+                margin-bottom: 20px;
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 20px;
+            }
+            th, td {
+                border: 1px solid #ddd;
+                padding: 10px;
+                text-align: left;
+            }
+            th {
+                background-color: #f4f4f4;
+            }
+            a {
+                color: #007bff;
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .button {
+                display: inline-block;
+                padding: 10px 20px;
+                color: white;
+                background-color: #007bff;
+                border-radius: 5px;
+                text-decoration: none;
+                font-size: 1em;
+                margin-top: 20px;
+                text-align: center;
+            }
+            .button:hover {
+                background-color: #0056b3;
+            }
+    </style>
+</head>
+<body>
+    <h1 class="course-title">{{ course.title }}</h1>
+    <p>{{ course.description }}</p>
+    <p>Instructor: {{ course.instructor.username }}</p>
+    <p>Duration: {{ course.duration_in_hours }}</p>
+    <h2>Lectures</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Course content</th>
+               
+            </tr>
+        </thead>
+        <tbody>
+            {% for lecture in lectures %}
+                <tr>
+                    <td><a href="{{ lecture.video }}" target="_blank">{{ lecture.title }}</a></td>
+                
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{% url 'quiz_page' course.id %}" class="button">Attend Quiz</a>
+
+</body>
+</html>
